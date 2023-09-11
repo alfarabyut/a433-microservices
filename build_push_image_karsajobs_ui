@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Menyimpan direktori saat ini
+current_dir=$(pwd)
+
+# Pindah ke direktori tempat berkas script berada
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$script_dir"
+
+IMAGE_NAME="karsajobs-ui"
+TAG="latest"
+
+# Membuat Docker image dari Dockerfile
+docker build -t $IMAGE_NAME:$TAG .
+
+NEW_IMAGE_NAME="learndockerdeveloper/$IMAGE_NAME:$TAG"
+
+# Mengubah nama image agar sesuai dengan format Docker Hub
+docker tag $IMAGE_NAME:$TAG $NEW_IMAGE_NAME
+
+# Melihat daftar image di lokal
+docker images
+
+echo $PASSWORD_DOCKER_HUB | docker login -u learndockerdeveloper --password-stdin
+
+docker push $NEW_IMAGE_NAME
